@@ -1,26 +1,31 @@
 import java.util.Scanner;
 
-public class Calculator {
+public class Main {
     public static void main(String[] args) throws ScanerException {
-
+        int i = 0;
+        while (i<1){
+            Scanner scn = new Scanner(System.in);
+            System.out.print("Введите выражение: ");
+            String exp = scn.nextLine();
+            System.out.println(calc(exp));
+        }
+    }
+    public static String calc(String input) throws ScanerException {
         Converter converter = new Converter();
         String[] actions = {"+", "-", "/", "*"};
         String[] regexAction = {"\\+", "-", "/", "\\*"};
-        Scanner scn = new Scanner(System.in);
-        System.out.print("Введите выражение: ");
-        String exp = scn.nextLine();
         int actionIndex = -1;
+        int result;
         for (int i = 0; i < actions.length; i++) {
-            if (exp.contains(actions[i])) {
+            if (input.contains(actions[i])) {
                 actionIndex = i;
                 break;
             }
         }
-
-        if (actionIndex == -1) {
-            throw new ScanerException("throws Exception //т.к. строка не является математической операцие");
+        if(actionIndex == -1){
+            throw new ScanerException("throws Exception //т.к. строка не является математической операцией");
         }
-        String[] data = exp.split(regexAction[actionIndex]);
+        String[] data = input.split(regexAction[actionIndex]);
         if (data.length > 2) {
             throw new ScanerException("throws Exception //т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
         }
@@ -33,26 +38,28 @@ public class Calculator {
             } else {
                 a = Integer.parseInt(data[0]);
                 b = Integer.parseInt(data[1]);
+                if (a>10 || b>10 || a<1 || b<1){
+                    throw new ScanerException("throws Exception //т.к. калькулятор принимает числа от 1 до 10 включительно");
+                }
             }
-            int result;
             switch (actions[actionIndex]) {
-                    case "+":
-                        result = a + b;
-                        break;
-                    case "-":
-                        result = a - b;
-                        break;
-                    case "*":
-                        result = a * b;
-                        break;
-                    default:
-                        result = a / b;
-                        break;
+                case "+":
+                    result = a + b;
+                    break;
+                case "-":
+                    result = a - b;
+                    break;
+                case "*":
+                    result = a * b;
+                    break;
+                default:
+                    result = a / b;
+                    break;
             }
             if (isRoman) {
-                System.out.println(converter.intToRoman(result));
+                return converter.intToRoman(result);
             } else {
-                System.out.println(result);
+                return Integer.toString(result);
             }
         } else {
             throw new ScanerException("throws Exception //т.к. используются одновременно разные системы счисления");
